@@ -76,10 +76,9 @@ dependencies {
     //Lifecycle Architecture Component
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    // Koin for Android
+    // Koin
     implementation "org.koin:koin-android:$koin_version"
-    // Koin Android Scope feature
-    implementation "org.koin:koin-android-scope:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
     // Coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"

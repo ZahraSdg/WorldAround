@@ -1,17 +1,22 @@
 package ir.zahrasadeghi.worldaround.view
 
-import androidx.lifecycle.ViewModelProviders
+import android.os.Bundle
 import ir.zahrasadeghi.worldaround.R
 import ir.zahrasadeghi.worldaround.viewmodel.MainViewModel
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : BaseActivity<MainViewModel>() {
 
-    override val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    override val viewModel: MainViewModel by inject()
 
     override val layoutId: Int
         get() = R.layout.activity_main
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, VenueListFragment.newInstance()).commit()
+    }
 }

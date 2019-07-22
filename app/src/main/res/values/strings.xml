@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WorldAround</string>
+    <string name="no_venues">No Venues</string>
 </resources>
