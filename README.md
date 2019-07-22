@@ -1,0 +1,1 @@
+Application shows venues around the user and it's details using foursquare api.
