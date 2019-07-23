@@ -2,24 +2,15 @@ package ir.zahrasadeghi.worldaround
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import ir.zahrasadeghi.worldaround.viewmodel.MainViewModel
-import ir.zahrasadeghi.worldaround.viewmodel.VenueListViewModel
-import org.koin.android.ext.koin.androidApplication
+import ir.zahrasadeghi.worldaround.modules.repositoryModules
+import ir.zahrasadeghi.worldaround.modules.viewModelModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
+import timber.log.Timber
 
 @Suppress("unused")
 class App : Application() {
-
-
-    private val appModule = module {
-
-        viewModel { MainViewModel(androidApplication()) }
-        viewModel { VenueListViewModel(androidApplication()) }
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -29,7 +20,9 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(appModule)
+            modules(listOf(viewModelModules, repositoryModules))
         }
+
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 }

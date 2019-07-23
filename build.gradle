@@ -5,6 +5,7 @@ buildscript {
 
         compiler_version = "3.4.2"
         kotlin_version = '1.3.31'
+        gms_version = '4.2.0'
 
         espresso_version = '3.2.0'
         mockito_version = '2.21.0'
@@ -22,6 +23,10 @@ buildscript {
         koin_version = '2.0.1'
 
         coroutines_version = '1.2.0'
+
+        location_version = '17.0.0'
+
+        timber_version = '4.7.1'
     }
 
     repositories {
@@ -32,6 +37,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$compiler_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.gms:google-services:$gms_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
