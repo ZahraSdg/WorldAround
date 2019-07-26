@@ -7,4 +7,6 @@
     <string name="location_setting_message">We can\'t find you. Please change your location mode to \"High accuracy(GPS and networks)\" in your settings.</string>
     <string name="dismiss">Dismiss</string>
     <!--endregion-->
+
+    <string name="menu_refresh">Refresh</string>
 </resources>

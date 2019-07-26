@@ -6,6 +6,7 @@ import android.location.Location
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.google.android.gms.common.api.ResolvableApiException
@@ -15,6 +16,7 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import ir.zahrasadeghi.worldaround.datasource.VenuesDataSourceFactory
 import ir.zahrasadeghi.worldaround.model.LiveLocation
+import ir.zahrasadeghi.worldaround.model.NetworkState
 import ir.zahrasadeghi.worldaround.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
@@ -30,6 +32,8 @@ class VenueListViewModel(
 
     companion object {
         private const val MIN_PLACEMENT = 100
+        private const val INITIAL_LOAD_SIZE = 20
+        private const val PAGE_SIZE = 10
     }
 
     //region Private Parameters
@@ -41,6 +45,7 @@ class VenueListViewModel(
         get() = venuesDataSourceFactory == null
 
     private var venueItems: LiveData<PagedList<RecommendedItem>> = MutableLiveData()
+    private var state: LiveData<NetworkState> = MutableLiveData()
     //endregion
 
     //region Public parameters
@@ -74,6 +79,8 @@ class VenueListViewModel(
 
     //region Public functions
     fun getVenueItems(): LiveData<PagedList<RecommendedItem>> = venueItems
+
+    fun getState(): LiveData<NetworkState> = state
 
     fun checkLocationSettings() {
 
@@ -122,13 +129,17 @@ class VenueListViewModel(
 
             val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(10)
-                .setPageSize(5)
+                .setInitialLoadSizeHint(INITIAL_LOAD_SIZE)
+                .setPageSize(PAGE_SIZE)
                 .build()
 
             venuesDataSourceFactory?.let { factory ->
                 venueItems = LivePagedListBuilder(factory, pagedListConfig)
                     .build()
+
+                state = Transformations.switchMap(factory.venuesSourceLiveData) { venueDataSource ->
+                    venueDataSource.state
+                }
             }
         }
     }

@@ -18,12 +18,11 @@ class VenueDataSource(
     PositionalDataSource<RecommendedItem>() {
 
 
-    var state: MutableLiveData<NetworkState> = MutableLiveData()
+    var state = MutableLiveData<NetworkState>()
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<RecommendedItem>) {
 
         var result: ApiResult<List<RecommendedItem>>
-        state.postValue(LOADING)
 
         GlobalScope.launch(Dispatchers.Main) {
             result = venueExploreRepo.loadVenues(
@@ -35,12 +34,9 @@ class VenueDataSource(
             if (result is ApiResult.Success) {
                 val resultData = (result as ApiResult.Success<List<RecommendedItem>>).data
                 callback.onResult(resultData)
-                state.postValue(SUCCESSFUL)
             } else {
-                state.postValue(ERROR)
             }
         }
-        state.postValue(COMPLETE)
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<RecommendedItem>) {
@@ -57,7 +53,7 @@ class VenueDataSource(
 
             if (result is ApiResult.Success) {
                 val resultData = (result as ApiResult.Success<List<RecommendedItem>>).data
-                callback.onResult(resultData, params.requestedStartPosition, resultData.size)
+                callback.onResult(resultData, params.requestedStartPosition)
                 state.postValue(SUCCESSFUL)
             } else {
                 state.postValue(ERROR)
