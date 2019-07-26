@@ -6,19 +6,20 @@ import android.location.Location
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
-import ir.zahrasadeghi.worldaround.model.ApiResult
+import ir.zahrasadeghi.worldaround.datasource.VenuesDataSourceFactory
 import ir.zahrasadeghi.worldaround.model.LiveLocation
 import ir.zahrasadeghi.worldaround.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import ir.zahrasadeghi.worldaround.util.AppConstants
-import kotlinx.coroutines.launch
-import timber.log.Timber
+
 
 class VenueListViewModel(
     private val locationRepo: LocationRepo,
@@ -28,13 +29,18 @@ class VenueListViewModel(
     BaseAndroidViewModel(application) {
 
     companion object {
-        private const val MIN_PLACEMENT = 50
-        private const val INIT_RADIUS = 500L
+        private const val MIN_PLACEMENT = 100
     }
 
     //region Private Parameters
     private val lastLocation: Location?
         get() = locationRepo.lastLocation
+
+    private var venuesDataSourceFactory: VenuesDataSourceFactory? = null
+    private val pagingNotInitialized: Boolean
+        get() = venuesDataSourceFactory == null
+
+    private var venueItems: LiveData<PagedList<RecommendedItem>> = MutableLiveData()
     //endregion
 
     //region Public parameters
@@ -47,19 +53,13 @@ class VenueListViewModel(
     private var _locationSettingSatisfied = MutableLiveData<Boolean>()
     var locationSettingSatisfied: LiveData<Boolean> = _locationSettingSatisfied
 
-    private val _venueItems = MutableLiveData<List<RecommendedItem>>().apply { value = ArrayList() }
-    val venueItems: LiveData<List<RecommendedItem>> = _venueItems
-
     private var _needRefresh = MutableLiveData<Boolean>().apply { value = false }
     val needRefresh: LiveData<Boolean> = _needRefresh
-
-    private var _venueLoading = MutableLiveData<Boolean>().apply { value = true }
-    val venueLoading: LiveData<Boolean> = _venueLoading
     //endregion
 
     init {
         checkLocationPermission()
-        loadVenues()
+        initPaging()
     }
 
     //region Private functions
@@ -73,6 +73,8 @@ class VenueListViewModel(
     //endregion
 
     //region Public functions
+    fun getVenueItems(): LiveData<PagedList<RecommendedItem>> = venueItems
+
     fun checkLocationSettings() {
 
         val client: SettingsClient = LocationServices.getSettingsClient(getApplication<Application>())
@@ -110,22 +112,32 @@ class VenueListViewModel(
         }
     }
 
-    fun loadVenues() = viewModelScope.launch {
+    private fun initPaging() {
         lastLocation?.let {
-
-            _venueLoading.value = true
 
             val latLngStr = it.latitude.toString() + "," + it.longitude.toString()
 
-            val result = venueExploreRepo.loadVenues(latLngStr, INIT_RADIUS)
+            venuesDataSourceFactory =
+                VenuesDataSourceFactory(latLngStr, venueExploreRepo)
 
-            if (result is ApiResult.Success) {
-                _venueItems.value = ArrayList(result.data)
-            } else {
-                Timber.d((result as ApiResult.Error).exception)
+            val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(10)
+                .setPageSize(5)
+                .build()
+
+            venuesDataSourceFactory?.let { factory ->
+                venueItems = LivePagedListBuilder(factory, pagedListConfig)
+                    .build()
             }
+        }
+    }
 
-            _venueLoading.value = false
+    fun refresh() {
+        if (pagingNotInitialized) {
+            initPaging()
+        } else {
+            venuesDataSourceFactory?.venuesSourceLiveData?.value?.invalidate()
         }
     }
     //endregion

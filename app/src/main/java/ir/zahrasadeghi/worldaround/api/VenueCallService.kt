@@ -10,6 +10,8 @@ interface VenueCallService {
     @GET("venues/explore")
     suspend fun getRecommendations(
         @Query("ll", encoded = true) targetLatLng: String,
-        @Query("radius") radius: Long
+        @Query("sortByDistance") sortByDistance: Int = 1,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
     ): Response<ResponseBody>
 }

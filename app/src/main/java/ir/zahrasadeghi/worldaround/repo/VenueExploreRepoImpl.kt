@@ -12,20 +12,25 @@ import kotlinx.coroutines.withContext
 
 class VenueExploreRepoImpl : VenueExploreRepo {
 
+    companion object {
+        const val SORT_BY_DISTANCE = 1
+    }
+
     private val venueCallService by lazy {
         APIService.retrofit.create(VenueCallService::class.java)
     }
 
     override suspend fun loadVenues(
         targetLatLng: String,
-        radius: Long
+        limit: Int,
+        offset: Int
     ): ApiResult<List<RecommendedItem>> {
 
         return withContext(Dispatchers.IO) {
 
             var result: List<RecommendedItem> = emptyList()
 
-            val response = venueCallService.getRecommendations(targetLatLng, radius)
+            val response = venueCallService.getRecommendations(targetLatLng, SORT_BY_DISTANCE, limit, offset)
 
             val gsonBuilder = GsonBuilder()
             val listType = object : TypeToken<List<RecommendedItem>>() {}.type

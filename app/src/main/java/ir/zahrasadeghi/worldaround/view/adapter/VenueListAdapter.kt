@@ -2,14 +2,14 @@ package ir.zahrasadeghi.worldaround.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ir.zahrasadeghi.worldaround.databinding.ItemVenueBinding
 import ir.zahrasadeghi.worldaround.model.RecommendedItem
 
 
-class VenueListAdapter : ListAdapter<RecommendedItem, VenueListAdapter.ViewHolder>(VenueDiffCallback()) {
+class VenueListAdapter : PagedListAdapter<RecommendedItem, VenueListAdapter.ViewHolder>(VenueDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -18,7 +18,7 @@ class VenueListAdapter : ListAdapter<RecommendedItem, VenueListAdapter.ViewHolde
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.bind(item)
+        item?.let { holder.bind(it) }
     }
 
     class ViewHolder private constructor(private val binding: ItemVenueBinding) :

@@ -20,7 +20,7 @@ object AppPreferences {
             location.latitude = Preferences.getString(LAST_LOCATION_LAT, "0").toDouble()
             location.longitude = Preferences.getString(LAST_LOCATION_LNG, "0").toDouble()
 
-            return if (location.latitude.equals(0) || location.longitude.equals(0)){
+            return if (location.latitude.equals(0.0) || location.longitude.equals(0.0)) {
                 null
             } else {
                 location

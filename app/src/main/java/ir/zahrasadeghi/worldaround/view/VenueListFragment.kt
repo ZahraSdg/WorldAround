@@ -71,7 +71,7 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
         viewModel.needRefresh.observe(this, Observer {
             it?.let {
                 if (it) {
-                    viewModel.loadVenues()
+                    viewModel.refresh()
                 }
             }
         })
