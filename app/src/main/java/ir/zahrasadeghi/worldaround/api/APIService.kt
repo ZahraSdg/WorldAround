@@ -4,6 +4,7 @@ import ir.zahrasadeghi.worldaround.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 object APIService {
@@ -17,7 +18,12 @@ object APIService {
     }
     private val client: OkHttpClient by lazy {
         val httpClient = OkHttpClient().newBuilder()
-        httpClient.build()
+
+        httpClient.addInterceptor(ServiceInterceptor())
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
     }
 }
 
