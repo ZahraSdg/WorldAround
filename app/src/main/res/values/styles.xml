@@ -8,4 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextStyle.Title" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <style name="TextStyle.normal" parent="AppTheme">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
 </resources>

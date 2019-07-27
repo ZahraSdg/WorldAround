@@ -24,7 +24,11 @@ data class Location(
     val state: String,
     val country: String,
     val formattedAddress: List<String>
-)
+) {
+    fun getFormattedDistance(): String {
+        return String.format("%.2f", distance * 0.001)
+    }
+}
 
 data class LabeledLatLngs(
     val label: String,
@@ -46,7 +50,11 @@ data class Category(
 data class Icon(
     var prefix: String,
     var suffix: String
-)
+) {
+    fun getFormattedIconUtl(): String {
+        return prefix + "64" + suffix
+    }
+}
 //endregion
 
 data class Media(

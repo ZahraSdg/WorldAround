@@ -32,5 +32,7 @@ class App : Application() {
         Preferences.init(applicationContext.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE))
 
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 }

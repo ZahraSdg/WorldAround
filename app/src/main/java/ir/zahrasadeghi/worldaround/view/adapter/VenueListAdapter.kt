@@ -1,10 +1,14 @@
 package ir.zahrasadeghi.worldaround.view.adapter
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ir.zahrasadeghi.worldaround.R
 import ir.zahrasadeghi.worldaround.databinding.ItemVenueBinding
 import ir.zahrasadeghi.worldaround.model.RecommendedItem
 
@@ -27,6 +31,23 @@ class VenueListAdapter : PagedListAdapter<RecommendedItem, VenueListAdapter.View
         fun bind(item: RecommendedItem) {
 
             binding.item = item
+            val colorFilter: PorterDuffColorFilter
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                colorFilter = PorterDuffColorFilter(
+                    binding.root.resources.getColor(
+                        R.color.colorAccent, binding.root.resources.newTheme()
+                    ), PorterDuff.Mode.SRC_IN
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                colorFilter = PorterDuffColorFilter(
+                    binding.root.resources.getColor(
+                        R.color.colorAccent
+                    ), PorterDuff.Mode.SRC_IN
+                )
+            }
+
+            binding.venueCatIv.colorFilter = colorFilter
             binding.executePendingBindings()
         }
 

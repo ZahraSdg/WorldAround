@@ -20,6 +20,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
@@ -69,6 +70,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.constraintlayout:constraintlayout:$conatraint_version"
     implementation "androidx.recyclerview:recyclerview:$recycler_view_version"
+    implementation "androidx.cardview:cardview:$card_view_version"
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //Retrofit
@@ -91,4 +93,6 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    // Picasso
+    implementation "com.squareup.picasso:picasso:$picasso_version"
 }
