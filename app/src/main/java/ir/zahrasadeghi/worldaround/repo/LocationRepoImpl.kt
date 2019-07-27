@@ -4,8 +4,6 @@ import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
 import ir.zahrasadeghi.worldaround.model.LiveLocation
 import ir.zahrasadeghi.worldaround.util.preferences.AppPreferences
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class LocationRepoImpl(private val fusedLocationClient: FusedLocationProviderClient) : LocationRepo {
 
@@ -14,6 +12,6 @@ class LocationRepoImpl(private val fusedLocationClient: FusedLocationProviderCli
     override var lastLocation: Location?
         get() = AppPreferences.lastLocation
         set(value) {
-            GlobalScope.launch { AppPreferences.lastLocation = value }
+            AppPreferences.lastLocation = value
         }
 }

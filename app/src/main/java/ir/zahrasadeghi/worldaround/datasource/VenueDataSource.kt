@@ -10,13 +10,13 @@ import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class VenueDataSource(
     private val latLng: String,
     private val venueExploreRepo: VenueExploreRepo
 ) :
     PositionalDataSource<RecommendedItem>() {
-
 
     var state = MutableLiveData<NetworkState>()
 
@@ -25,16 +25,19 @@ class VenueDataSource(
         var result: ApiResult<List<RecommendedItem>>
 
         GlobalScope.launch(Dispatchers.Main) {
-            result = venueExploreRepo.loadVenues(
-                latLng,
-                params.loadSize,
-                params.startPosition
-            )
+            try {
+                result = venueExploreRepo.loadVenues(
+                    latLng,
+                    params.loadSize,
+                    params.startPosition
+                )
 
-            if (result is ApiResult.Success) {
-                val resultData = (result as ApiResult.Success<List<RecommendedItem>>).data
-                callback.onResult(resultData)
-            } else {
+                if (result is ApiResult.Success) {
+                    val resultData = (result as ApiResult.Success<List<RecommendedItem>>).data
+                    callback.onResult(resultData)
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
             }
         }
     }
@@ -44,21 +47,29 @@ class VenueDataSource(
         var result: ApiResult<List<RecommendedItem>>
         state.postValue(LOADING)
 
-        GlobalScope.launch(Dispatchers.Main) {
-            result = venueExploreRepo.loadVenues(
-                latLng,
-                params.requestedLoadSize,
-                params.requestedStartPosition
-            )
+        val startPosition = if (params.requestedStartPosition == -1) 0 else params.requestedStartPosition
 
-            if (result is ApiResult.Success) {
-                val resultData = (result as ApiResult.Success<List<RecommendedItem>>).data
-                callback.onResult(resultData, params.requestedStartPosition)
-                state.postValue(SUCCESSFUL)
-            } else {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                result = venueExploreRepo.loadVenues(
+                    latLng,
+                    params.requestedLoadSize,
+                    startPosition
+                )
+
+                if (result is ApiResult.Success) {
+                    val resultData = (result as ApiResult.Success<List<RecommendedItem>>).data
+                    callback.onResult(resultData, startPosition)
+                    state.postValue(SUCCESSFUL)
+                } else {
+                    state.postValue(ERROR)
+                }
+            } catch (e: Exception) {
                 state.postValue(ERROR)
+                Timber.e(e)
+            } finally {
+                state.postValue(COMPLETE)
             }
-            state.postValue(COMPLETE)
         }
     }
 
