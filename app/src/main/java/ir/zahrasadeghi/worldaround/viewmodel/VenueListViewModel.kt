@@ -21,6 +21,8 @@ import ir.zahrasadeghi.worldaround.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import ir.zahrasadeghi.worldaround.util.AppConstants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class VenueListViewModel(
@@ -148,6 +150,9 @@ class VenueListViewModel(
         if (pagingNotInitialized) {
             initPaging()
         } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                venueExploreRepo.clearCache()
+            }
             venuesDataSourceFactory?.venuesSourceLiveData?.value?.invalidate()
         }
     }

@@ -25,6 +25,16 @@ data class Location(
     val country: String,
     val formattedAddress: List<String>
 ) {
+    constructor(
+        address: String?,
+        distance: Int
+    ) : this(
+        address, "",
+        0.0, 0.0, emptyList(),
+        distance, "", "",
+        "", "", "", emptyList()
+    )
+
     fun getFormattedDistance(): String {
         return String.format("%.2f", distance * 0.001)
     }
@@ -45,13 +55,15 @@ data class Category(
     var shortName: String,
     var icon: Icon,
     var primary: Boolean
-)
+) {
+    constructor(icon: Icon) : this("", "", "", "", icon, false)
+}
 
 data class Icon(
     var prefix: String,
     var suffix: String
 ) {
-    fun getFormattedIconUtl(): String {
+    fun getFormattedIconUrl(): String {
         return prefix + "64" + suffix
     }
 }
@@ -60,4 +72,6 @@ data class Icon(
 data class Media(
     var count: Int,
     var groups: JsonArray
-)
+) {
+    constructor() : this(0, JsonArray())
+}

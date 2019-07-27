@@ -10,4 +10,12 @@ interface VenueExploreRepo {
         limit: Int,
         offset: Int
     ): ApiResult<List<RecommendedItem>>
+
+    suspend fun clearCache()
+
+    suspend fun getVenues(
+        targetLatLng: String,
+        limit: Int,
+        offset: Int
+    ): List<RecommendedItem>
 }

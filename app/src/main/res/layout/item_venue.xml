@@ -49,7 +49,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_image"
-                bind:imageUrl="@{item.venue.categories.get(0).icon.getFormattedIconUtl()}" />
+                bind:imageUrl="@{item.venue.categories.get(0).icon.getFormattedIconUrl()}" />
 
             <View
                 android:layout_width="0.5dp"
