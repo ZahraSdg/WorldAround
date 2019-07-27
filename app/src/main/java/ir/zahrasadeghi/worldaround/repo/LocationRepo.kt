@@ -1,7 +1,7 @@
 package ir.zahrasadeghi.worldaround.repo
 
 import android.location.Location
-import ir.zahrasadeghi.worldaround.model.LiveLocation
+import ir.zahrasadeghi.worldaround.data.model.LiveLocation
 
 interface LocationRepo {
 

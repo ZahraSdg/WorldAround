@@ -2,7 +2,7 @@ package ir.zahrasadeghi.worldaround.repo
 
 import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
-import ir.zahrasadeghi.worldaround.model.LiveLocation
+import ir.zahrasadeghi.worldaround.data.model.LiveLocation
 import ir.zahrasadeghi.worldaround.util.preferences.AppPreferences
 
 class LocationRepoImpl(private val fusedLocationClient: FusedLocationProviderClient) : LocationRepo {

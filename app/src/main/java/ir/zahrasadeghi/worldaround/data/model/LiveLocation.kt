@@ -1,4 +1,4 @@
-package ir.zahrasadeghi.worldaround.model
+package ir.zahrasadeghi.worldaround.data.model
 
 import android.annotation.SuppressLint
 import android.location.Location

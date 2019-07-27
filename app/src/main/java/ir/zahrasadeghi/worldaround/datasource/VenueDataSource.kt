@@ -2,10 +2,10 @@ package ir.zahrasadeghi.worldaround.datasource
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PositionalDataSource
-import ir.zahrasadeghi.worldaround.model.NetworkState
-import ir.zahrasadeghi.worldaround.model.NetworkState.COMPLETE
-import ir.zahrasadeghi.worldaround.model.NetworkState.LOADING
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.data.model.NetworkState
+import ir.zahrasadeghi.worldaround.data.model.NetworkState.COMPLETE
+import ir.zahrasadeghi.worldaround.data.model.NetworkState.LOADING
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

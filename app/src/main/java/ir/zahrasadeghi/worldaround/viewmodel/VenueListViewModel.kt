@@ -15,9 +15,9 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import ir.zahrasadeghi.worldaround.datasource.VenuesDataSourceFactory
-import ir.zahrasadeghi.worldaround.model.LiveLocation
-import ir.zahrasadeghi.worldaround.model.NetworkState
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.data.model.LiveLocation
+import ir.zahrasadeghi.worldaround.data.model.NetworkState
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import ir.zahrasadeghi.worldaround.util.AppConstants

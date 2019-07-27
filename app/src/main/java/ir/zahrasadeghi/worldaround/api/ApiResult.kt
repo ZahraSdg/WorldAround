@@ -1,4 +1,4 @@
-package ir.zahrasadeghi.worldaround.model
+package ir.zahrasadeghi.worldaround.api
 
 sealed class ApiResult<out R> {
 

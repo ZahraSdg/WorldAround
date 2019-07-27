@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import ir.zahrasadeghi.worldaround.R
 import ir.zahrasadeghi.worldaround.databinding.FragmentVenueListBinding
-import ir.zahrasadeghi.worldaround.model.NetworkState
+import ir.zahrasadeghi.worldaround.data.model.NetworkState
 import ir.zahrasadeghi.worldaround.util.AppConstants
 import ir.zahrasadeghi.worldaround.view.adapter.VenueListAdapter
 import ir.zahrasadeghi.worldaround.viewmodel.VenueListViewModel

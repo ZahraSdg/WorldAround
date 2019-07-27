@@ -1,7 +1,7 @@
 package ir.zahrasadeghi.worldaround.repo
 
-import ir.zahrasadeghi.worldaround.model.ApiResult
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.api.ApiResult
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 
 interface VenueExploreRepo {
 

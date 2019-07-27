@@ -1,4 +1,4 @@
-package ir.zahrasadeghi.worldaround.model.room
+package ir.zahrasadeghi.worldaround.data.room
 
 import androidx.room.Dao
 import androidx.room.Insert

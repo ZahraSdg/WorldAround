@@ -2,7 +2,7 @@ package ir.zahrasadeghi.worldaround.datasource
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 
 class VenuesDataSourceFactory(private val latLng: String, private val venueExploreRepo: VenueExploreRepo) :

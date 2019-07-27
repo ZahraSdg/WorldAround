@@ -3,8 +3,6 @@ package ir.zahrasadeghi.worldaround
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import ir.zahrasadeghi.worldaround.modules.repositoryModules
-import ir.zahrasadeghi.worldaround.modules.viewModelModules
 import ir.zahrasadeghi.worldaround.util.preferences.Preferences
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

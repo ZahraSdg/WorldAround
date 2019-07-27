@@ -8,7 +8,7 @@
 
         <variable
             name="item"
-            type="ir.zahrasadeghi.worldaround.model.RecommendedItem" />
+            type="ir.zahrasadeghi.worldaround.data.model.RecommendedItem" />
     </data>
 
     <androidx.cardview.widget.CardView

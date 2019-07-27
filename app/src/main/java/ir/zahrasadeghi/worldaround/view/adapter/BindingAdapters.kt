@@ -9,7 +9,7 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import ir.zahrasadeghi.worldaround.R
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 
 
 object BindingAdapters {

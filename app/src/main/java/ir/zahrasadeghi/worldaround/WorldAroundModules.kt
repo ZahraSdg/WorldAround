@@ -1,7 +1,7 @@
-package ir.zahrasadeghi.worldaround.modules
+package ir.zahrasadeghi.worldaround
 
 import com.google.android.gms.location.LocationServices
-import ir.zahrasadeghi.worldaround.model.room.WorldAroundDataBase
+import ir.zahrasadeghi.worldaround.data.room.WorldAroundDataBase
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.LocationRepoImpl
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo

@@ -44,4 +44,4 @@
 
 
 # Application classes that will be serialized/deserialized over Gson
--keep class ir.zahrasadeghi.worldaround.model.** { *; }
+-keep class ir.zahrasadeghi.worldaround.data.model.** { *; }

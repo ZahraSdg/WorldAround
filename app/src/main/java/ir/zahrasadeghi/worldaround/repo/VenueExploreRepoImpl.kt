@@ -3,11 +3,12 @@ package ir.zahrasadeghi.worldaround.repo
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import ir.zahrasadeghi.worldaround.api.APIService
+import ir.zahrasadeghi.worldaround.api.ApiResult
 import ir.zahrasadeghi.worldaround.api.VenueCallService
 import ir.zahrasadeghi.worldaround.api.VenueDeserializer
-import ir.zahrasadeghi.worldaround.model.*
-import ir.zahrasadeghi.worldaround.model.room.Venue
-import ir.zahrasadeghi.worldaround.model.room.VenueDao
+import ir.zahrasadeghi.worldaround.data.model.*
+import ir.zahrasadeghi.worldaround.data.room.Venue
+import ir.zahrasadeghi.worldaround.data.room.VenueDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

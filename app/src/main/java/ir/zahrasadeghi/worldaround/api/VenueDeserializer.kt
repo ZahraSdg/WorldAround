@@ -3,7 +3,7 @@ package ir.zahrasadeghi.worldaround.api
 import com.google.gson.Gson
 import com.google.gson.JsonDeserializer
 import com.google.gson.reflect.TypeToken
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 
 
 val VenueDeserializer =

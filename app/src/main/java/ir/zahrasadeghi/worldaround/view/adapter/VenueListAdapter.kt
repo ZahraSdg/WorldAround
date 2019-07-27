@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ir.zahrasadeghi.worldaround.R
 import ir.zahrasadeghi.worldaround.databinding.ItemVenueBinding
-import ir.zahrasadeghi.worldaround.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 
 
 class VenueListAdapter : PagedListAdapter<RecommendedItem, VenueListAdapter.ViewHolder>(VenueDiffCallback()) {
