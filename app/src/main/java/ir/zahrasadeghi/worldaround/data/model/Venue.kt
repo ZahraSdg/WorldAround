@@ -25,6 +25,8 @@ data class Location(
     val country: String,
     val formattedAddress: List<String>
 ) {
+    constructor(): this("", 0)
+
     constructor(
         address: String?,
         distance: Int

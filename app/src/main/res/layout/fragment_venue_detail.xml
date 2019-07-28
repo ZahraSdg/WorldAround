@@ -1,10 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="ir.zahrasadeghi.worldaround.viewmodel.VenueDetailViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/imageGuildLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.45" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/lineGuildLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/startGuildLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.03" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/endGuildLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.97" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toTopOf="@id/imageGuildLine"
+            app:layout_constraintTop_toTopOf="parent"
+            bind:imageUrl="@{viewmodel.venueDetail.bestPhoto.getFormattedPhotoUrl()}" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueNameTv"
+            style="@style/TextStyle.Title.Bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_padding"
+            android:gravity="left"
+            android:text="@{viewmodel.venueDetail.name}"
+            app:layout_constraintBaseline_toBaselineOf="@id/venueRateTv"
+            app:layout_constraintEnd_toStartOf="@id/likeIv"
+            app:layout_constraintStart_toEndOf="@id/venueRateTv"
+            app:layout_constraintTop_toBottomOf="@id/imageGuildLine"
+            tools:text="Venue Name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueCatTv"
+            style="@style/TextStyle.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="@{viewmodel.venueDetail.categories.isEmpty() ? `` : viewmodel.venueDetail.categories.get(0).name}"
+            app:layout_constraintStart_toStartOf="@id/venueNameTv"
+            app:layout_constraintTop_toBottomOf="@+id/venueNameTv"
+            tools:text="Cafe" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueRateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_padding"
+            android:background="@drawable/rate_circle"
+            android:gravity="center"
+            android:text="@{String.valueOf(viewmodel.venueDetail.rating)}"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/startGuildLine"
+            app:layout_constraintTop_toBottomOf="@id/imageGuildLine"
+            tools:text="9.6" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueAddressTv"
+            style="@style/TextStyle.normal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:gravity="left"
+            android:text="@{viewmodel.venueDetail.location.address}"
+            app:layout_constraintEnd_toStartOf="@id/likeIv"
+            app:layout_constraintStart_toStartOf="@id/venueNameTv"
+            app:layout_constraintTop_toBottomOf="@+id/venueCatTv"
+            tools:text="Venue address" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/likeIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_padding"
+            app:layout_constraintEnd_toEndOf="@id/endGuildLine"
+            app:layout_constraintTop_toBottomOf="@id/imageGuildLine"
+            app:srcCompat="@drawable/ic_like" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueLikesTv"
+            style="@style/TextStyle.normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:layout_marginRight="@dimen/medium_padding"
+            android:layout_marginLeft="@dimen/medium_padding"
+            android:text="@{String.valueOf(viewmodel.venueDetail.likes.count)}"
+            app:layout_constraintEnd_toEndOf="@+id/endGuildLine"
+            app:layout_constraintStart_toStartOf="@id/likeIv"
+            app:layout_constraintTop_toBottomOf="@+id/likeIv"
+            tools:text="1245" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venuePriceTv"
+            style="@style/TextStyle.normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="@{viewmodel.venueDetail.price.currency}"
+            app:layout_constraintStart_toStartOf="@id/venueNameTv"
+            app:layout_constraintTop_toBottomOf="@+id/venueAddressTv"
+            tools:text="$$" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:layout_constraintStart_toStartOf="@id/startGuildLine"
+            app:layout_constraintEnd_toEndOf="@id/endGuildLine"
+            app:layout_constraintTop_toBottomOf="@id/lineGuildLine"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/phoneCallIv"
+            android:layout_width="@dimen/phone_call_iv"
+            android:layout_height="@dimen/phone_call_iv"
+            android:layout_marginLeft="@dimen/small_padding"
+            android:layout_marginRight="@dimen/medium_padding"
+            android:layout_marginTop="@dimen/medium_padding"
+            app:layout_constraintStart_toStartOf="@id/venueRateTv"
+            app:layout_constraintTop_toBottomOf="@id/lineGuildLine"
+            app:srcCompat="@drawable/ic_phone_call"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/venueContactTv"
+            style="@style/TextStyle.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_padding"
+            android:text="@{viewmodel.venueDetail.contact.formattedPhone}"
+            app:layout_constraintStart_toEndOf="@+id/phoneCallIv"
+            app:layout_constraintTop_toTopOf="@+id/phoneCallIv"
+            app:layout_constraintBottom_toBottomOf="@+id/phoneCallIv"
+            tools:text="Cafe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

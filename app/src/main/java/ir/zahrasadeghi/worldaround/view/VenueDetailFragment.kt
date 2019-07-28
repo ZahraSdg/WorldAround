@@ -3,6 +3,7 @@ package ir.zahrasadeghi.worldaround.view
 import android.os.Bundle
 import android.view.View
 import ir.zahrasadeghi.worldaround.R
+import ir.zahrasadeghi.worldaround.databinding.FragmentVenueDetailBinding
 import ir.zahrasadeghi.worldaround.util.AppConstants
 import ir.zahrasadeghi.worldaround.viewmodel.VenueDetailViewModel
 import org.koin.android.ext.android.inject
@@ -17,6 +18,12 @@ class VenueDetailFragment : BaseFragment<VenueDetailViewModel>() {
         get() = R.layout.fragment_venue_detail
 
     override val viewModel: VenueDetailViewModel by inject()
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (bindingView as FragmentVenueDetailBinding).viewmodel = viewModel
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -22,5 +22,5 @@ interface VenueExploreRepo {
 
     suspend fun updateVenues(targetLatLng: String, initLoadSize: Int): ApiResult<Any>
 
-    suspend fun getVenueDetail(venueId: String): ApiResult<VenueDetail?>
+    suspend fun getVenueDetail(venueId: String): ApiResult<VenueDetail>
 }

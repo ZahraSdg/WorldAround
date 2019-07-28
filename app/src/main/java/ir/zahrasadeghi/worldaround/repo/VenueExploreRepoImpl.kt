@@ -90,9 +90,9 @@ class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
         return ApiResult.Error(Exception())
     }
 
-    override suspend fun getVenueDetail(venueId: String): ApiResult<VenueDetail?> {
+    override suspend fun getVenueDetail(venueId: String): ApiResult<VenueDetail> {
         try {
-            var result: VenueDetail? = null
+            var result = VenueDetail()
             val response = venueCallService.getVenueDetail(venueId)
 
             val gsonBuilder = GsonBuilder()
