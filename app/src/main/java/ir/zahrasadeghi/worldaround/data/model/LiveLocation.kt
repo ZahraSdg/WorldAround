@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.OnSuccessListener
 import timber.log.Timber
 
 class LiveLocation(private val fusedLocationClient: FusedLocationProviderClient) : MutableLiveData<Location>() {
@@ -22,15 +21,10 @@ class LiveLocation(private val fusedLocationClient: FusedLocationProviderClient)
         smallestDisplacement = DISPLACEMENT
     }
 
-    private val locationCallback = object : LocationCallback(), OnSuccessListener<Location> {
+    private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             val location = locationResult?.locations?.firstOrNull()
             Timber.d("onLocationResult$location")
-            location?.let { value = it }
-        }
-
-        override fun onSuccess(location: Location?) {
-            Timber.d("lastKnownLocation$location")
             location?.let { value = it }
         }
     }
@@ -42,9 +36,6 @@ class LiveLocation(private val fusedLocationClient: FusedLocationProviderClient)
 
     @SuppressLint("MissingPermission")
     override fun onActive() {
-        // Try to immediately find a location
-        fusedLocationClient.lastLocation.addOnSuccessListener(locationCallback)
-
         // Request updates if there’s someone observing
         if (hasActiveObservers()) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
