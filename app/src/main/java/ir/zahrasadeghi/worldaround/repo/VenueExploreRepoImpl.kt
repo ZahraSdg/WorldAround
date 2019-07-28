@@ -2,10 +2,7 @@ package ir.zahrasadeghi.worldaround.repo
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import ir.zahrasadeghi.worldaround.api.APIService
-import ir.zahrasadeghi.worldaround.api.ApiResult
-import ir.zahrasadeghi.worldaround.api.VenueCallService
-import ir.zahrasadeghi.worldaround.api.VenueDeserializer
+import ir.zahrasadeghi.worldaround.api.*
 import ir.zahrasadeghi.worldaround.data.model.*
 import ir.zahrasadeghi.worldaround.data.room.Venue
 import ir.zahrasadeghi.worldaround.data.room.VenueDao
@@ -93,8 +90,30 @@ class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
         return ApiResult.Error(Exception())
     }
 
-    override suspend fun getVenueDetail(venueId: String) {
+    override suspend fun getVenueDetail(venueId: String): ApiResult<VenueDetail?> {
+        try {
+            var result: VenueDetail? = null
+            val response = venueCallService.getVenueDetail(venueId)
 
+            val gsonBuilder = GsonBuilder()
+            val listType = object : TypeToken<VenueDetail>() {}.type
+
+            gsonBuilder.registerTypeAdapter(listType, VenueDetailDeserializer)
+
+            val customGson = gsonBuilder.create()
+            response.body()?.let {
+                result = customGson.fromJson(it.string(), listType) as VenueDetail
+            }
+
+            return if (response.isSuccessful) {
+                ApiResult.Success(result)
+            } else {
+                ApiResult.Error(Exception(response.errorBody()?.string()))
+            }
+
+        } catch (e: Exception) {
+            return ApiResult.Error(e)
+        }
     }
     //endregion
 
