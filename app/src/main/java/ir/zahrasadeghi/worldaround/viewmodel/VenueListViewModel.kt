@@ -14,10 +14,11 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
-import ir.zahrasadeghi.worldaround.datasource.VenuesDataSourceFactory
+import ir.zahrasadeghi.worldaround.api.ApiResult
 import ir.zahrasadeghi.worldaround.data.model.LiveLocation
 import ir.zahrasadeghi.worldaround.data.model.NetworkState
 import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.datasource.VenuesDataSourceFactory
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import ir.zahrasadeghi.worldaround.util.AppConstants
@@ -62,22 +63,15 @@ class VenueListViewModel(
 
     private var _needRefresh = MutableLiveData<Boolean>().apply { value = false }
     val needRefresh: LiveData<Boolean> = _needRefresh
+
+    private val _updateAvailable = MutableLiveData<Boolean>()
+    val updateAvailable: LiveData<Boolean> = _updateAvailable
     //endregion
 
     init {
         checkLocationPermission()
         initPaging()
     }
-
-    //region Private functions
-    private fun checkLocationPermission() {
-
-        _locationPermissionGranted.value = ContextCompat.checkSelfPermission(
-            getApplication<Application>().applicationContext,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-    //endregion
 
     //region Public functions
     fun getVenueItems(): LiveData<PagedList<RecommendedItem>> = venueItems
@@ -121,6 +115,28 @@ class VenueListViewModel(
         }
     }
 
+    fun refresh(immediate: Boolean) {
+        if (pagingNotInitialized) {
+            initPaging()
+        } else {
+            updateVenues(immediate)
+        }
+    }
+
+    fun resetPaging() {
+        venuesDataSourceFactory?.venuesSourceLiveData?.value?.invalidate()
+    }
+    //endregion
+
+    //region Private functions
+    private fun checkLocationPermission() {
+
+        _locationPermissionGranted.value = ContextCompat.checkSelfPermission(
+            getApplication<Application>().applicationContext,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun initPaging() {
         lastLocation?.let {
 
@@ -146,14 +162,19 @@ class VenueListViewModel(
         }
     }
 
-    fun refresh() {
-        if (pagingNotInitialized) {
-            initPaging()
-        } else {
-            viewModelScope.launch(Dispatchers.IO) {
-                venueExploreRepo.clearCache()
+    private fun updateVenues(immediate: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            lastLocation?.let {
+
+                val latLngStr = it.latitude.toString() + "," + it.longitude.toString()
+                val result = venueExploreRepo.updateVenues(latLngStr, INITIAL_LOAD_SIZE)
+
+                if (immediate) {
+                    resetPaging()
+                }
+                _updateAvailable.postValue(!immediate and (result is ApiResult.Success))
             }
-            venuesDataSourceFactory?.venuesSourceLiveData?.value?.invalidate()
         }
     }
     //endregion

@@ -11,9 +11,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import ir.zahrasadeghi.worldaround.R
-import ir.zahrasadeghi.worldaround.databinding.FragmentVenueListBinding
 import ir.zahrasadeghi.worldaround.data.model.NetworkState
+import ir.zahrasadeghi.worldaround.databinding.FragmentVenueListBinding
 import ir.zahrasadeghi.worldaround.util.AppConstants
+import ir.zahrasadeghi.worldaround.util.popIn
+import ir.zahrasadeghi.worldaround.util.popOut
 import ir.zahrasadeghi.worldaround.view.adapter.VenueListAdapter
 import ir.zahrasadeghi.worldaround.viewmodel.VenueListViewModel
 import kotlinx.android.synthetic.main.fragment_venue_list.*
@@ -45,7 +47,12 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
         venueListRv.adapter = VenueListAdapter()
 
         swipeRefresh.setOnRefreshListener {
-            viewModel.refresh()
+            viewModel.refresh(true)
+        }
+
+        updateBtn.setOnClickListener {
+            viewModel.resetPaging()
+            it.popIn()
         }
     }
 
@@ -65,7 +72,7 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
 
             R.id.menu_refresh -> {
                 swipeRefresh.isRefreshing = true
-                viewModel.refresh()
+                viewModel.refresh(false)
 
                 return true
             }
@@ -105,13 +112,22 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
         viewModel.needRefresh.observe(this, Observer {
             it?.let {
                 if (it) {
-                    viewModel.refresh()
+                    viewModel.refresh(false)
                 }
             }
         })
 
         viewModel.getState().observe(this, Observer {
             swipeRefresh.isRefreshing = it == NetworkState.LOADING
+        })
+
+        viewModel.updateAvailable.observe(this, Observer {
+            it?.let {
+                swipeRefresh.isRefreshing = false
+                if (it) {
+                    updateBtn.popOut()
+                }
+            }
         })
     }
 

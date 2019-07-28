@@ -74,6 +74,24 @@ class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
     override suspend fun clearCache() {
         venueDao.clearTable()
     }
+
+    override suspend fun updateVenues(targetLatLng: String, initLoadSize: Int): ApiResult<Any> {
+        try {
+            val result = loadVenues(targetLatLng, initLoadSize, 0)
+
+            if (result is ApiResult.Success) {
+
+                GlobalScope.launch(Dispatchers.IO) {
+                    clearCache()
+                    insertVenues(result.data)
+                }
+                return ApiResult.Success(Any())
+            }
+        } catch (e: Exception) {
+            return ApiResult.Error(e)
+        }
+        return ApiResult.Error(Exception())
+    }
     //endregion
 
     //region private functions
