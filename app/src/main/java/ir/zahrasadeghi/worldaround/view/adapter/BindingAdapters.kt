@@ -21,38 +21,41 @@ object BindingAdapters {
 
     @JvmStatic
     @BindingAdapter("bind:imageUrl")
-    fun loadImage(view: ImageView, imageUrl: String) {
+    fun loadImage(view: ImageView, imageUrl: String?) {
 
-        val picasso = Picasso.Builder(view.context).build()
+        if (!imageUrl.isNullOrBlank()) {
 
-        picasso.load(imageUrl)
-            .networkPolicy(NetworkPolicy.OFFLINE)
-            .placeholder(R.drawable.ic_image)
-            .fit()
-            .into(view, object : Callback {
-                override fun onSuccess() {
-                    picasso.shutdown()
-                }
+            val picasso = Picasso.Builder(view.context).build()
 
-                override fun onError(e: Exception?) {
-                    loadFromNetwork()
-                }
+            picasso.load(imageUrl)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .placeholder(R.drawable.ic_image)
+                .fit()
+                .into(view, object : Callback {
+                    override fun onSuccess() {
+                        picasso.shutdown()
+                    }
 
-                private fun loadFromNetwork() {
-                    picasso.load(imageUrl)
-                        .placeholder(R.drawable.ic_image)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                        .fit()
-                        .into(view, object : Callback {
-                            override fun onSuccess() {
-                                picasso.shutdown()
-                            }
+                    override fun onError(e: Exception?) {
+                        loadFromNetwork()
+                    }
 
-                            override fun onError(e: Exception?) {
-                                picasso.shutdown()
-                            }
-                        })
-                }
-            })
+                    private fun loadFromNetwork() {
+                        picasso.load(imageUrl)
+                            .placeholder(R.drawable.ic_image)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                            .fit()
+                            .into(view, object : Callback {
+                                override fun onSuccess() {
+                                    picasso.shutdown()
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    picasso.shutdown()
+                                }
+                            })
+                    }
+                })
+        }
     }
 }

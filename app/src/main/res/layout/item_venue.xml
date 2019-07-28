@@ -53,7 +53,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_image"
-                bind:imageUrl="@{item.venue.categories.get(0).icon.getFormattedIconUrl()}" />
+                bind:imageUrl="@{item.venue.categories.get(0).icon == null ? ``: item.venue.categories.get(0).icon.getFormattedIconUrl()}" />
 
             <View
                 android:layout_width="0.5dp"
@@ -112,7 +112,7 @@
                 android:layout_marginTop="@dimen/small_padding"
                 android:layout_marginBottom="@dimen/small_padding"
                 android:gravity="start"
-                android:text="@{item.venue.location.getFormattedDistance() + `km`}"
+                android:text="@{item.venue.location == null ? ``: item.venue.location.getFormattedDistance() + `km`}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/buttonGuildLine"
