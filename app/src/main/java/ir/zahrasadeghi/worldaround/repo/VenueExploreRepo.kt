@@ -20,4 +20,6 @@ interface VenueExploreRepo {
     ): List<RecommendedItem>
 
     suspend fun updateVenues(targetLatLng: String, initLoadSize: Int): ApiResult<Any>
+
+    suspend fun getVenueDetail(venueId: String)
 }

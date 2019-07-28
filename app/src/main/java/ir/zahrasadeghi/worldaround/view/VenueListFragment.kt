@@ -44,7 +44,8 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
         super.onActivityCreated(savedInstanceState)
 
         (bindingView as FragmentVenueListBinding).viewmodel = viewModel
-        venueListRv.adapter = VenueListAdapter()
+
+        setupRecyclerView()
 
         swipeRefresh.setOnRefreshListener {
             viewModel.refresh(true)
@@ -156,4 +157,19 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
             AppConstants.LOCATION_PERMISSIONS_REQUEST_CODE
         )
     }
+
+    private fun setupRecyclerView() {
+        val adapter = VenueListAdapter()
+        adapter.onItemClick = {
+
+            val fragment = VenueDetailFragment.newInstance(Bundle().apply {
+                putString(AppConstants.VENUE_ID_BUNDLE, it)
+            })
+
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container, fragment)
+                ?.addToBackStack(null)?.commit()
+        }
+        venueListRv.adapter = adapter
+    }
+
 }

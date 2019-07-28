@@ -7,6 +7,7 @@ import ir.zahrasadeghi.worldaround.repo.LocationRepoImpl
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepoImpl
 import ir.zahrasadeghi.worldaround.viewmodel.MainViewModel
+import ir.zahrasadeghi.worldaround.viewmodel.VenueDetailViewModel
 import ir.zahrasadeghi.worldaround.viewmodel.VenueListViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -24,4 +25,5 @@ val viewModelModules: Module = module {
 
     viewModel { MainViewModel(androidApplication()) }
     viewModel { VenueListViewModel(get(), get(), androidApplication()) }
+    viewModel { VenueDetailViewModel(get(), androidApplication()) }
 }

@@ -9,14 +9,16 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ir.zahrasadeghi.worldaround.R
-import ir.zahrasadeghi.worldaround.databinding.ItemVenueBinding
 import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
+import ir.zahrasadeghi.worldaround.databinding.ItemVenueBinding
 
 
 class VenueListAdapter : PagedListAdapter<RecommendedItem, VenueListAdapter.ViewHolder>(VenueDiffCallback()) {
 
+    var onItemClick: ((itemId: String) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(onItemClick, parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -25,12 +27,25 @@ class VenueListAdapter : PagedListAdapter<RecommendedItem, VenueListAdapter.View
         item?.let { holder.bind(it) }
     }
 
-    class ViewHolder private constructor(private val binding: ItemVenueBinding) :
+    class ViewHolder private constructor(
+        private val onItemClick: ((itemId: String) -> Unit)?,
+        private val binding: ItemVenueBinding
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecommendedItem) {
 
             binding.item = item
+            binding.venueCatIv.colorFilter = getColorFilter()
+
+            binding.executePendingBindings()
+
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(item.venue.id)
+            }
+        }
+
+        private fun getColorFilter(): PorterDuffColorFilter {
             val colorFilter: PorterDuffColorFilter
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 colorFilter = PorterDuffColorFilter(
@@ -46,17 +61,15 @@ class VenueListAdapter : PagedListAdapter<RecommendedItem, VenueListAdapter.View
                     ), PorterDuff.Mode.SRC_IN
                 )
             }
-
-            binding.venueCatIv.colorFilter = colorFilter
-            binding.executePendingBindings()
+            return colorFilter
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(onItemClick: ((itemId: String) -> Unit)?, parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ItemVenueBinding.inflate(layoutInflater, parent, false)
 
-                return ViewHolder(binding)
+                return ViewHolder(onItemClick, binding)
             }
         }
     }
