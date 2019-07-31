@@ -6,10 +6,8 @@ import ir.zahrasadeghi.worldaround.api.*
 import ir.zahrasadeghi.worldaround.data.model.*
 import ir.zahrasadeghi.worldaround.data.room.Venue
 import ir.zahrasadeghi.worldaround.data.room.VenueDao
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
 
@@ -22,32 +20,6 @@ class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
     }
 
     //region public functions
-    override suspend fun loadVenues(targetLatLng: String, limit: Int, offset: Int): ApiResult<List<RecommendedItem>> {
-
-        return withContext(Dispatchers.IO) {
-
-            var result: List<RecommendedItem> = emptyList()
-
-            val response = venueCallService.getRecommendations(targetLatLng, SORT_BY_DISTANCE, limit, offset)
-
-            val gsonBuilder = GsonBuilder()
-            val listType = object : TypeToken<List<RecommendedItem>>() {}.type
-
-            gsonBuilder.registerTypeAdapter(listType, VenueDeserializer)
-
-            val customGson = gsonBuilder.create()
-            response.body()?.let {
-                result = customGson.fromJson(it.string(), listType) as List<RecommendedItem>
-            }
-
-            return@withContext if (response.isSuccessful) {
-                ApiResult.Success(result)
-            } else {
-                ApiResult.Error(Exception(response.errorBody()?.string()))
-            }
-        }
-    }
-
     override suspend fun getVenues(targetLatLng: String, limit: Int, offset: Int): List<RecommendedItem> {
 
         val venus = venueDao.getAllVenues(limit, offset)
@@ -68,17 +40,13 @@ class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
         return emptyList()
     }
 
-    override suspend fun clearCache() {
-        venueDao.clearTable()
-    }
-
     override suspend fun updateVenues(targetLatLng: String, initLoadSize: Int): ApiResult<Any> {
         try {
             val result = loadVenues(targetLatLng, initLoadSize, 0)
 
             if (result is ApiResult.Success) {
 
-                GlobalScope.launch(Dispatchers.IO) {
+                GlobalScope.launch {
                     clearCache()
                     insertVenues(result.data)
                 }
@@ -118,6 +86,33 @@ class VenueExploreRepoImpl(private val venueDao: VenueDao) : VenueExploreRepo {
     //endregion
 
     //region private functions
+    private suspend fun loadVenues(targetLatLng: String, limit: Int, offset: Int): ApiResult<List<RecommendedItem>> {
+
+        var result: List<RecommendedItem> = emptyList()
+
+        val response = venueCallService.getRecommendations(targetLatLng, SORT_BY_DISTANCE, limit, offset)
+
+        val gsonBuilder = GsonBuilder()
+        val listType = object : TypeToken<List<RecommendedItem>>() {}.type
+
+        gsonBuilder.registerTypeAdapter(listType, VenueDeserializer)
+
+        val customGson = gsonBuilder.create()
+        response.body()?.let {
+            result = customGson.fromJson(it.string(), listType) as List<RecommendedItem>
+        }
+
+        return if (response.isSuccessful) {
+            ApiResult.Success(result)
+        } else {
+            ApiResult.Error(Exception(response.errorBody()?.string()))
+        }
+    }
+
+    private fun clearCache() {
+        venueDao.clearTable()
+    }
+
     private fun insertVenues(items: List<RecommendedItem>) {
         GlobalScope.launch {
             items.forEach {

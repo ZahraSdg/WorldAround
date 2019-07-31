@@ -6,14 +6,6 @@ import ir.zahrasadeghi.worldaround.data.model.VenueDetail
 
 interface VenueExploreRepo {
 
-    suspend fun loadVenues(
-        targetLatLng: String,
-        limit: Int,
-        offset: Int
-    ): ApiResult<List<RecommendedItem>>
-
-    suspend fun clearCache()
-
     suspend fun getVenues(
         targetLatLng: String,
         limit: Int,

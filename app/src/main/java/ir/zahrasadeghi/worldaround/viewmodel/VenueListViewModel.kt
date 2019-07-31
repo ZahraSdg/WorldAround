@@ -22,7 +22,6 @@ import ir.zahrasadeghi.worldaround.datasource.VenuesDataSourceFactory
 import ir.zahrasadeghi.worldaround.repo.LocationRepo
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
 import ir.zahrasadeghi.worldaround.util.AppConstants
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -49,6 +48,8 @@ class VenueListViewModel(
 
     private var venueItems: LiveData<PagedList<RecommendedItem>> = MutableLiveData()
     private var state: LiveData<NetworkState> = MutableLiveData()
+    private val firstTry: Boolean
+        get() = lastLocation == null
     //endregion
 
     //region Public parameters
@@ -60,9 +61,6 @@ class VenueListViewModel(
 
     private var _locationSettingSatisfied = MutableLiveData<Boolean>()
     var locationSettingSatisfied: LiveData<Boolean> = _locationSettingSatisfied
-
-    private var _needRefresh = MutableLiveData<Boolean>().apply { value = false }
-    val needRefresh: LiveData<Boolean> = _needRefresh
 
     private val _updateAvailable = MutableLiveData<Boolean>()
     val updateAvailable: LiveData<Boolean> = _updateAvailable
@@ -107,19 +105,20 @@ class VenueListViewModel(
     fun checkLocation() {
 
         _location.value?.let {
-            if (lastLocation == null || lastLocation!!.distanceTo(it) > MIN_PLACEMENT) {
-                _needRefresh.value = true
+            if (firstTry) {
+                updateLocation()
+                refresh(true)
+            } else if (lastLocation!!.distanceTo(it) > MIN_PLACEMENT) {
+                refresh(false)
             }
-            _needRefresh.value = false
         }
     }
 
     fun refresh(immediate: Boolean) {
         if (pagingNotInitialized) {
             initPaging()
-        } else {
-            updateVenues(immediate)
         }
+        updateVenues(immediate)
     }
 
     fun resetPaging() {
@@ -163,14 +162,14 @@ class VenueListViewModel(
     }
 
     private fun updateVenues(immediate: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
 
             lastLocation?.let {
 
                 val latLngStr = it.latitude.toString() + "," + it.longitude.toString()
                 val result = venueExploreRepo.updateVenues(latLngStr, INITIAL_LOAD_SIZE)
 
-                if (immediate) {
+                if (immediate && result is ApiResult.Success) {
                     resetPaging()
                 }
                 _updateAvailable.postValue(!immediate and (result is ApiResult.Success))

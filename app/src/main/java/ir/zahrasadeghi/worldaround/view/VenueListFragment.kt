@@ -110,14 +110,6 @@ class VenueListFragment : BaseFragment<VenueListViewModel>() {
             }
         })
 
-        viewModel.needRefresh.observe(this, Observer {
-            it?.let {
-                if (it) {
-                    viewModel.refresh(false)
-                }
-            }
-        })
-
         viewModel.getState().observe(this, Observer {
             swipeRefresh.isRefreshing = it == NetworkState.LOADING
         })

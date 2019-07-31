@@ -7,7 +7,6 @@ import ir.zahrasadeghi.worldaround.data.model.NetworkState.COMPLETE
 import ir.zahrasadeghi.worldaround.data.model.NetworkState.LOADING
 import ir.zahrasadeghi.worldaround.data.model.RecommendedItem
 import ir.zahrasadeghi.worldaround.repo.VenueExploreRepo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -23,7 +22,7 @@ class VenueDataSource(
 
         var result: List<RecommendedItem>
 
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch {
             result = venueExploreRepo.getVenues(
                 latLng,
                 params.loadSize,
@@ -43,7 +42,7 @@ class VenueDataSource(
 
         val startPosition = if (params.requestedStartPosition == -1) 0 else params.requestedStartPosition
 
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch {
             result = venueExploreRepo.getVenues(
                 latLng,
                 params.requestedLoadSize,
