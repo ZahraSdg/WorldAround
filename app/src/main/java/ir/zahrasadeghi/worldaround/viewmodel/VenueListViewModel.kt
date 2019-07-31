@@ -108,7 +108,6 @@ class VenueListViewModel(
 
         _location.value?.let {
             if (lastLocation == null || lastLocation!!.distanceTo(it) > MIN_PLACEMENT) {
-                locationRepo.lastLocation = it
                 _needRefresh.value = true
             }
             _needRefresh.value = false
@@ -125,6 +124,7 @@ class VenueListViewModel(
 
     fun resetPaging() {
         venuesDataSourceFactory?.venuesSourceLiveData?.value?.invalidate()
+        updateLocation()
     }
     //endregion
 
@@ -175,6 +175,12 @@ class VenueListViewModel(
                 }
                 _updateAvailable.postValue(!immediate and (result is ApiResult.Success))
             }
+        }
+    }
+
+    private fun updateLocation() {
+        _location.value?.let {
+            locationRepo.lastLocation = it
         }
     }
     //endregion
