@@ -1,0 +1,102 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+    defaultConfig {
+        applicationId "ir.zahrasadeghi.worldaround"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        releaseConfig {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    buildTypes {
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+
+            buildConfigField "String", 'BASE_URL', "\"https://api.foursquare.com/v2/\""
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            buildConfigField "String", 'BASE_URL', "\"https://api.foursquare.com/v2/\""
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/*'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //Test
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test:runner:$runner_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    //View
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.constraintlayout:constraintlayout:$conatraint_version"
+    implementation "androidx.recyclerview:recyclerview:$recycler_view_version"
+    implementation "androidx.cardview:cardview:$card_view_version"
+    //Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    // JSON Parsing
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.retrofit2:converter-gson:$gson_convertor_version"
+    //Lifecycle Architecture Component
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    // Koin
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
+    // Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    // Location service
+    implementation "com.google.android.gms:play-services-location:$location_version"
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+    // Paging
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    // Picasso
+    implementation "com.squareup.picasso:picasso:$picasso_version"
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+}
